@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -86,14 +87,13 @@ WSGI_APPLICATION = 'espnet.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'espnet_db',
-        'USER': 'espnet_user',
-        'PASSWORD': 'espnet_password',
-        'HOST': 'db',
-        'PORT': '5432',
+        'NAME': os.environ.get('POSTGRES_DB', 'espnet_db'),
+        'USER': os.environ.get('POSTGRES_USER', 'espnet_user'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'espnet_password'),
+        'HOST': os.environ.get('DB_HOST', 'db'),
+        'PORT': os.environ.get('DB_PORT', '5432'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

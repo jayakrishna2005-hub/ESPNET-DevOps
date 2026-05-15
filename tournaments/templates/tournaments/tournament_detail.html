@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block title %}{{ tournament.name }} - ESPNET{% endblock %}
+
+{% block content %}
+<div class="bg-gray-800 border-t-8 border-t-blue-600 border-x border-b border-gray-700 rounded-xl overflow-hidden mb-8 shadow-2xl">
+    <div class="p-8">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-gray-700 pb-6 mb-6">
+            <div>
+                <h1 class="font-heading font-black text-4xl mb-2">{{ tournament.name }}</h1>
+                <div class="flex gap-3 text-sm">
+                    <span class="bg-gray-700 text-gray-200 px-3 py-1 rounded-full font-medium">{{ tournament.game }}</span>
+                    <span class="bg-gray-700 text-gray-200 px-3 py-1 rounded-full font-medium">{{ tournament.get_format_display }}</span>
+                    <span class="bg-blue-600/20 text-blue-400 border border-blue-600/30 px-3 py-1 rounded-full font-medium">Starts: {{ tournament.start_date|date:"M d, Y" }}</span>
+                </div>
+            </div>
+            {% if user.is_authenticated %}
+            <div class="mt-6 md:mt-0">
+                <a href="{% url 'tournaments:register' tournament.pk %}" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-8 rounded-xl transition-transform transform hover:-translate-y-0.5 shadow-lg shadow-blue-500/20 inline-block text-center">
+                    Register Team
+                </a>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2 space-y-6">
+                <div>
+                    <h3 class="font-heading font-bold text-xl mb-4 border-b border-gray-700 pb-2">Tournament Description</h3>
+                    <p class="text-gray-300 leading-relaxed bg-gray-900/50 p-6 rounded-xl border border-gray-700/50">
+                        Join the {{ tournament.name }} and compete against top teams on ESPNET. Registrations are open until the start date. GLHF!
+                    </p>
+                </div>
+                
+                <div>
+                    <h3 class="font-heading font-bold text-xl mb-4 border-b border-gray-700 pb-2 flex justify-between items-center">
+                        Registered Teams
+                        <span class="bg-blue-600 px-3 py-1 rounded text-sm text-white">{{ tournament.registrations.count }} Total</span>
+                    </h3>
+                    
+                    {% if tournament.registrations.all %}
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {% for reg in tournament.registrations.all %}
+                        <a href="{% url 'teams:detail' reg.team.pk %}" class="flex items-center p-4 bg-gray-900 border border-gray-700 rounded-xl hover:border-gray-500 transition-colors">
+                            {% if reg.team.logo %}
+                            <img src="{{ reg.team.logo.url }}" class="w-12 h-12 rounded object-cover mr-4 border border-gray-700">
+                            {% else %}
+                            <div class="w-12 h-12 rounded bg-gray-700 font-bold uppercase flex items-center justify-center mr-4 border border-gray-600">
+                                {{ reg.team.name|make_list|first }}
+                            </div>
+                            {% endif %}
+                            <div class="font-bold text-white tracking-wide">{{ reg.team.name }}</div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="bg-gray-900/50 p-6 rounded-xl border border-gray-700/50 text-center text-gray-500 content-center h-32">
+                        No teams have registered yet. Space is open!
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div>
+                <div class="bg-gradient-to-b from-gray-900 to-gray-800 rounded-xl border border-gray-700 p-6">
+                    <h3 class="font-heading font-bold text-lg mb-4 text-center border-b border-gray-700 pb-3">Bracket Preview</h3>
+                    <div class="text-center py-10 text-gray-500 border border-dashed border-gray-600 rounded-lg bg-gray-900/30">
+                        <svg class="w-10 h-10 mx-auto mb-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                        Bracket generates at start date.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

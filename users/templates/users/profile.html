@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block title %}My Profile - ESPNET{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden">
+        <!-- Banner -->
+        <div class="h-32 bg-gradient-to-r from-blue-600 to-violet-600"></div>
+        
+        <!-- Profile Info -->
+        <div class="px-8 pb-8 relative">
+            <div class="flex justify-between items-end -mt-12 mb-6">
+                <div class="flex items-end">
+                    {% if user.player_profile.avatar %}
+                        <img src="{{ user.player_profile.avatar.url }}" alt="Avatar" class="w-24 h-24 rounded-xl border-4 border-gray-800 shadow-lg object-cover bg-gray-900">
+                    {% else %}
+                        <div class="w-24 h-24 rounded-xl border-4 border-gray-800 shadow-lg bg-gray-700 flex items-center justify-center text-3xl font-bold uppercase">
+                            {{ user.username|make_list|first }}
+                        </div>
+                    {% endif %}
+                    
+                    <div class="ml-6 mb-2">
+                        <h2 class="font-heading font-bold text-3xl text-white flex items-center">
+                            {{ user.username }}
+                            <span class="ml-3 text-xs bg-blue-500/20 text-blue-400 border border-blue-500/30 px-2 py-1 rounded shadow-sm">
+                                Level {{ user.reputation.trust_score }}
+                            </span>
+                        </h2>
+                        <div class="text-gray-400 mt-1 capitalize">{{ user.player_profile.rank|default:"Unranked" }} Player</div>
+                    </div>
+                </div>
+                <div>
+                    <a href="{% url 'profile_edit' %}" class="bg-gray-700 hover:bg-gray-600 text-sm px-4 py-2 rounded-lg font-medium transition-colors border border-gray-600">Edit Profile</a>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <div class="bg-gray-900/50 p-4 rounded-xl border border-gray-700/50">
+                    <div class="text-gray-400 text-sm mb-1">Win Rate</div>
+                    <div class="font-heading text-2xl font-bold text-green-400">{{ user.player_profile.win_rate }}%</div>
+                </div>
+                <div class="bg-gray-900/50 p-4 rounded-xl border border-gray-700/50">
+                    <div class="text-gray-400 text-sm mb-1">K/D Ratio</div>
+                    <div class="font-heading text-2xl font-bold text-blue-400">{{ user.player_profile.kd_ratio }}</div>
+                </div>
+                <div class="bg-gray-900/50 p-4 rounded-xl border border-gray-700/50">
+                    <div class="text-gray-400 text-sm mb-1">Wins</div>
+                    <div class="font-heading text-2xl font-bold text-white">{{ user.player_profile.wins }}</div>
+                </div>
+                <div class="bg-gray-900/50 p-4 rounded-xl border border-gray-700/50">
+                    <div class="text-gray-400 text-sm mb-1">Matches</div>
+                    <div class="font-heading text-2xl font-bold text-white">{{ user.player_profile.wins|add:user.player_profile.losses }}</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
+                <div class="md:col-span-2">
+                    <h3 class="font-heading font-bold text-lg mb-3">About Me</h3>
+                    <p class="text-gray-300 leading-relaxed bg-gray-900/30 p-4 rounded-xl border border-gray-700/50">
+                        {{ user.player_profile.bio|default:"This player hasn't added a bio yet." }}
+                    </p>
+                </div>
+                <div>
+                    <h3 class="font-heading font-bold text-lg mb-3">Games</h3>
+                    <div class="flex flex-wrap gap-2">
+                        {% if user.player_profile.preferred_games %}
+                            {% for game in user.player_profile.preferred_games.split %}
+                                <span class="bg-violet-500/20 border border-violet-500/30 text-violet-300 px-3 py-1 rounded-full text-xs font-medium">{{ game }}</span>
+                            {% endfor %}
+                        {% else %}
+                            <span class="text-gray-500 italic">No games listed</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

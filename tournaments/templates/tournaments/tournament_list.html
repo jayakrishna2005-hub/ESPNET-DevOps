@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Tournaments - ESPNET{% endblock %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-8">
+    <h1 class="font-heading font-black text-4xl">Tournaments</h1>
+    {% if user.is_authenticated %}
+    <a href="{% url 'tournaments:create' %}" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-6 rounded-lg transition-transform transform hover:-translate-y-0.5 shadow-lg shadow-blue-500/30">Host Tournament</a>
+    {% endif %}
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for tournament in tournaments %}
+    <a href="{% url 'tournaments:detail' tournament.pk %}" class="bg-gray-800 border border-t-4 border-gray-700 border-t-blue-500 rounded-xl overflow-hidden hover:border-blue-400 transition-all transform hover:-translate-y-1 block">
+        <div class="p-6">
+            <div class="flex justify-between items-start mb-4">
+                <h3 class="font-heading font-bold text-2xl leading-tight">{{ tournament.name }}</h3>
+                <span class="bg-blue-500/20 text-blue-400 border border-blue-500/30 px-2 py-1 rounded text-xs font-bold uppercase tracking-wider">{{ tournament.game }}</span>
+            </div>
+            
+            <div class="space-y-2 mt-6">
+                <div class="flex justify-between text-sm text-gray-400 border-b border-gray-700 pb-2">
+                    <span class="font-bold">Format:</span>
+                    <span class="text-white">{{ tournament.get_format_display }}</span>
+                </div>
+                <div class="flex justify-between text-sm text-gray-400 border-b border-gray-700 pb-2">
+                    <span class="font-bold">Starts:</span>
+                    <span class="text-white">{{ tournament.start_date|date:"F d, Y" }}</span>
+                </div>
+                <div class="flex justify-between text-sm text-gray-400 pb-2">
+                    <span class="font-bold">Teams Registered:</span>
+                    <span class="text-blue-400 font-bold">{{ tournament.registrations.count }}</span>
+                </div>
+            </div>
+        </div>
+    </a>
+    {% empty %}
+    <div class="col-span-full text-center py-12 text-gray-500">
+        No active tournaments right now.
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

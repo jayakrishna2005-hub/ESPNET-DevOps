@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Register for {{ tournament.name }} - ESPNET{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto mt-10">
+    <div class="bg-gray-800 border border-blue-500/30 rounded-xl p-8 shadow-2xl relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-indigo-500"></div>
+        
+        <h1 class="font-heading font-black text-3xl mb-4 text-center">Tournament Registration</h1>
+        
+        <div class="bg-gray-900 border border-gray-700 rounded-lg p-6 mb-8 text-center">
+            <h2 class="text-2xl font-bold mb-2">{{ tournament.name }}</h2>
+            <div class="text-blue-400 font-bold mb-4">Registering Team: {{ team.name }}</div>
+            
+            <p class="text-gray-400 text-sm">By registering, you confirm that your roster is finalized and available to compete on {{ tournament.start_date|date:"F d, Y" }}.</p>
+        </div>
+
+        <form method="post" class="flex justify-end gap-4">
+            {% csrf_token %}
+            <a href="{% url 'tournaments:detail' tournament.pk %}" class="w-1/3 text-center bg-gray-700 hover:bg-gray-600 text-white py-3 rounded-lg transition-colors font-bold">Cancel</a>
+            <button type="submit" class="w-2/3 bg-blue-600 hover:bg-blue-500 text-white text-lg font-bold py-3 rounded-lg shadow-lg shadow-blue-500/20 transition-transform transform hover:-translate-y-1">
+                Confirm Registration
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

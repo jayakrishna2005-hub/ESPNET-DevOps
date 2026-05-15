@@ -1,0 +1,27 @@
+# Virtual Environment
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# SQLite database
+db.sqlite3
+
+# Environment variables
+.env
+
+# macOS files
+.DS_Store
+
+# VS Code settings
+.vscode/
+
+# Static files collected
+staticfiles/
+
+# Media uploads
+media/
+
+# Tailwind binary
+tailwindcss

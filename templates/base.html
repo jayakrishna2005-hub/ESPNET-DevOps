@@ -1,0 +1,76 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ESPNET - Esports Platform{% endblock %}</title>
+    <meta name="description" content="ESPNET - The premier competitive gaming platform.">
+    <link href="{% static 'css/output.css' %}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, h4, .font-heading { font-family: 'Outfit', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 flex flex-col min-h-screen">
+    <!-- Navbar -->
+    <nav class="bg-gray-800 border-b border-gray-700 shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/" class="flex-shrink-0 font-heading font-black text-2xl tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-violet-500 hover:from-blue-400 hover:to-violet-400 transition-all duration-300">
+                        ESPNET
+                    </a>
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            {% if user.is_authenticated %}
+                                <a href="{% url 'profile' %}" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all">Dashboard</a>
+                                <a href="{% url 'teams:list' %}" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all">Teams</a>
+                                <a href="{% url 'scrims:list' %}" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all">Scrims</a>
+                                <a href="{% url 'tournaments:list' %}" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all">Tournaments</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-4 flex items-center md:ml-6 space-x-4">
+                        {% if user.is_authenticated %}
+                            <div class="text-sm font-medium text-gray-300">Welcome, {{ user.username }}</div>
+                            <form method="post" action="{% url 'logout' %}">
+                                {% csrf_token %}
+                                <button type="submit" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all">Logout</button>
+                            </form>
+                        {% else %}
+                            <a href="{% url 'login' %}" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all">Login</a>
+                            <a href="{% url 'signup' %}" class="bg-gradient-to-r from-blue-600 to-blue-500 text-white hover:from-blue-500 hover:to-blue-400 px-5 py-2 rounded-md text-sm font-medium transition-all shadow-lg shadow-blue-500/30 transform hover:-translate-y-0.5">Sign Up</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow">
+        {% if messages %}
+            <div class="max-w-7xl mx-auto px-4 pt-4 sm:px-6 lg:px-8">
+                {% for message in messages %}
+                    <div class="p-4 mb-4 text-sm rounded-lg flex items-center shadow-md animate-fade-in-down {% if message.tags == 'error' %}bg-red-900/50 text-red-200 border border-red-800{% else %}bg-green-900/50 text-green-200 border border-green-800{% endif %}" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <footer class="bg-gray-950 text-center py-8 border-t border-gray-800 mt-auto">
+        <p class="font-heading font-black text-xl tracking-tighter text-gray-700 mb-2">ESPNET</p>
+        <p class="text-gray-500 text-sm">&copy; 2026 ESPNET Platform. Build your legacy.</p>
+    </footer>
+</body>
+</html>

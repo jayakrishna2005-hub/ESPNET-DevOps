@@ -1,0 +1,50 @@
+name: Django CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: espnet_db
+          POSTGRES_USER: espnet_user
+          POSTGRES_PASSWORD: espnet_password
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set Up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run Migrations
+        env:
+          POSTGRES_DB: espnet_db
+          POSTGRES_USER: espnet_user
+          POSTGRES_PASSWORD: espnet_password
+          DB_HOST: localhost
+        run: |
+          python manage.py migrate
+
+      - name: Run Tests
+        run: |
+          python manage.py test
+
+      - name: Build Docker Image
+        run: |
+          docker build -t espnet-app .

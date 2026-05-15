@@ -86,12 +86,8 @@ WSGI_APPLICATION = 'espnet.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('POSTGRES_DB', 'espnet_db'),
-        'USER': os.environ.get('POSTGRES_USER', 'espnet_user'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'espnet_password'),
-        'HOST': os.environ.get('DB_HOST', 'db'),
-        'PORT': os.environ.get('DB_PORT', '5432'),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
